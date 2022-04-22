@@ -10,7 +10,9 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="demo" target="18" />
       <module name="FileManager" target="18" />
+      <module name="FileManagerApp" target="18" />
     </bytecodeTargetLevel>
   </component>
 </project>
