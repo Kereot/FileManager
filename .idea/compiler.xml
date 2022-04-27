@@ -6,11 +6,17 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="FileManager" />
+        <module name="server" />
+        <module name="client" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="client" target="18" />
+      <module name="clientgui" target="18" />
+      <module name="demo" target="18" />
       <module name="FileManager" target="18" />
+      <module name="FileManagerApp" target="18" />
+      <module name="server" target="18" />
     </bytecodeTargetLevel>
   </component>
 </project>
