@@ -16,7 +16,8 @@ import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
-public class PanelController implements Initializable {
+public class ServerController implements Initializable {
+    public static Path path;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -51,11 +52,11 @@ public class PanelController implements Initializable {
         mainTable.getColumns().addAll(filesNameColumn, filesSizeColumn, filesDateColumn);
         mainTable.getSortOrder().add(filesSizeColumn);
 
-        drivesBox.getItems().clear();
-        for (Path p : FileSystems.getDefault().getRootDirectories()) {
-            drivesBox.getItems().add(p.toString());
-        }
-        drivesBox.getSelectionModel().select(0);
+//        drivesBox.getItems().clear();
+//        for (Path p : FileSystems.getDefault().getRootDirectories()) {
+//            drivesBox.getItems().add(p.toString());
+//        }
+//        drivesBox.getSelectionModel().select(0);
 
         mainTable.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() == 2 && mainTable.getSelectionModel().getSelectedItem() != null) {
@@ -66,7 +67,7 @@ public class PanelController implements Initializable {
             }
         });
 
-        list(Paths.get("."));
+        list(path);
 
     }
 

@@ -29,7 +29,7 @@ public class Controller {
     public void copyBtnAction(ActionEvent actionEvent) {
         try {
             PanelController leftPC = (PanelController) leftPanel.getProperties().get("ctrl");
-            PanelController rightPC = (PanelController) rightPanel.getProperties().get("ctrl");
+            PanelController rightPC = (PanelController) rightPanel.getProperties().get("srv");
 
             PanelController srcPC = null;
             PanelController dstPC = null;
@@ -117,7 +117,7 @@ public class Controller {
     public void transferBtnAction(ActionEvent actionEvent) {
         try {
             PanelController leftPC = (PanelController) leftPanel.getProperties().get("ctrl");
-            PanelController rightPC = (PanelController) rightPanel.getProperties().get("ctrl");
+            PanelController rightPC = (PanelController) rightPanel.getProperties().get("srv");
 
             PanelController srcPC = null;
             PanelController dstPC = null;
@@ -167,7 +167,7 @@ public class Controller {
     public void deleteBtnAction(ActionEvent actionEvent) {
         try {
             PanelController leftPC = (PanelController) leftPanel.getProperties().get("ctrl");
-            PanelController rightPC = (PanelController) rightPanel.getProperties().get("ctrl");
+            PanelController rightPC = (PanelController) rightPanel.getProperties().get("srv");
 
             PanelController srcPC = null;
             if (leftPC.getSelectedName() != null) {
@@ -247,7 +247,8 @@ public class Controller {
         }
     }
 
-    public static void buildMainScene(ActionEvent actionEvent) {
+    public static void buildMainScene(ActionEvent actionEvent, Path path) {
+        ServerController.path = path;
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(MainApp.class.getResource("main.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 1280, 600);
@@ -255,7 +256,7 @@ public class Controller {
             stage.setTitle("File Manager");
             stage.setScene(scene);
             stage.show();
-            ((Node) (actionEvent.getSource())).getScene().getWindow().hide();
+                        ((Node) (actionEvent.getSource())).getScene().getWindow().hide();
         } catch (IOException e) {
             e.printStackTrace();
         }
