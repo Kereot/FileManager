@@ -1,11 +1,15 @@
 package gui.client.requests;
 
-public class AuthRequest implements GenericRequest {
+public class AuthRequest implements Wrapper {
+    @Override
+    public Request getType() {
+        return Request.AUTH;
+    }
+
     private String login;
-    private String password;
+    private int password;
 
-
-    public AuthRequest(String login, String password) {
+    public AuthRequest(String login, int password) {
         this.login = login;
         this.password = password;
     }
@@ -14,12 +18,7 @@ public class AuthRequest implements GenericRequest {
         return login;
     }
 
-    public String getPassword() {
+    public int getPassword() {
         return password;
-    }
-
-    @Override
-    public String getType() {
-        return "auth";
     }
 }

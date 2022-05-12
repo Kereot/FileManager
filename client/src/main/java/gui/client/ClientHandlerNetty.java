@@ -1,30 +1,62 @@
 package gui.client;
 
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import reqs.Auth;
+import reqs.DirInfo;
+import reqs.PassServerPath;
 
-import java.nio.file.Path;
+public class ClientHandlerNetty extends ChannelInboundHandlerAdapter {
 
-public class ClientHandlerNetty extends SimpleChannelInboundHandler {
-
+    private Controller mc;
     private ActionEvent actionEvent;
 
-    public ClientHandlerNetty(ActionEvent actionEvent) {
+//    public ClientHandlerNetty(ActionEvent actionEvent) {
+//        ClientHandlerNetty.actionEvent = actionEvent;
+//    }
+
+    public ClientHandlerNetty(ActionEvent actionEvent, Controller mc) {
         this.actionEvent = actionEvent;
+        this.mc = mc;
+    }
+
+//    public ClientHandlerNetty(ActionEvent actionEvent, ServerController sc) {
+//        this.actionEvent = actionEvent;
+//        this.sc = sc;
+//    }
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        super.channelActive(ctx);
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
-        if (msg instanceof String message) { // нужно реализовать с помощью коллекции через Stream API
-            if (message.startsWith("/auth_ok")) {
-                String[] token = message.split("@", 2);
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        if (msg instanceof Auth message) {
                 Platform.runLater(() -> {
-                    Controller.buildMainScene(actionEvent, Path.of(token[1]));
+                    mc.buildMainScene(actionEvent, message.authList());
+//                    Controller.buildMainScene(actionEvent, message.authList());
                 });
-            }
         }
+        if (msg instanceof DirInfo message) {
+            Platform.runLater(() -> {
+               mc.updateList(message.dirInfoList());
+            });
+        }
+        if (msg instanceof PassServerPath message) {
+            Platform.runLater(() -> {
+                mc.setServerPath(message.currentServerPath());
+            });
+        }
+//        ctx.close();
+    }
+
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        cause.printStackTrace();
         ctx.close();
     }
 }

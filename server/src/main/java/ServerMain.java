@@ -3,7 +3,6 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.serialization.ClassResolver;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
@@ -28,7 +27,6 @@ public class ServerMain {
             ServerBootstrap serverBootstrap = new ServerBootstrap();
             serverBootstrap.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
-//                    .option(ChannelOption.SO_KEEPALIVE, true)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         public void initChannel(SocketChannel socketChannel) {
@@ -36,14 +34,16 @@ public class ServerMain {
                             inbound.addLast(
                                     new ObjectDecoder(ClassResolvers.cacheDisabled(null)),
                                     new ObjectEncoder(),
-                                    new ServerAuthHandler()
+                                    new ServerHandler()
                             );
                         }
                     });
             ChannelFuture channelFuture = serverBootstrap.bind(PORT).sync();
             LOGGER.warning("Server started!");
-            channelFuture.channel().closeFuture().sync();
-        } catch (InterruptedException e) {
+            DBHandler.connect();
+            LOGGER.warning("DB connected!");
+//            channelFuture.channel().closeFuture().sync();
+        } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "EXCEPTION!", e);
         }
 //        finally {

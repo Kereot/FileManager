@@ -1,5 +1,6 @@
 package gui.client;
 
+import gui.client.requests.AuthRequest;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,10 +15,12 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.List;
 import java.util.Optional;
 
 
 public class Controller {
+
 
     public void btnExitAction(ActionEvent actionEvent) {
         if (ClientNetty.hasConnected()) {
@@ -28,29 +31,45 @@ public class Controller {
 
     public void copyBtnAction(ActionEvent actionEvent) {
         try {
-            PanelController leftPC = (PanelController) leftPanel.getProperties().get("ctrl");
-            PanelController rightPC = (PanelController) rightPanel.getProperties().get("srv");
-
-            PanelController srcPC = null;
-            PanelController dstPC = null;
-            if (leftPC.getSelectedName() != null) {
-                srcPC = leftPC;
-                dstPC = rightPC;
-            }
-            if (rightPC.getSelectedName() != null) {
-                srcPC = rightPC;
-                dstPC = leftPC;
-            }
-
-            Path srcPath = Paths.get(srcPC.getCurrentPath(), srcPC.getSelectedName());
-
-            Path dstPath = Paths.get(dstPC.getCurrentPath()).resolve(srcPath.getFileName().toString());
-
-            if (Files.isDirectory(srcPath)) {
-                copyDir(srcPath, dstPath, dstPC);
-            } else {
-                copyFile(srcPath, dstPath, dstPC);
-            }
+//            PanelController leftPC = (PanelController) leftPanel.getProperties().get("ctrl");
+//            ServerController rightPC = (ServerController) rightPanel.getProperties().get("srv");
+//
+//
+//            if (leftPC.getSelectedName() != null) {
+//                PanelController srcPC = leftPC;
+//                ServerController dstPC = rightPC;
+//                Path srcPath = Paths.get(srcPC.getCurrentPath(), srcPC.getSelectedName());
+//
+//                Path dstPath = Paths.get(dstPC.getCurrentPath()).resolve(srcPath.getFileName().toString());
+//
+//                if (Files.isDirectory(srcPath)) {
+//                    copyDir(srcPath, dstPath, dstPC);
+//                } else {
+//                    copyFile(srcPath, dstPath, dstPC);
+//                }
+//            } else if (rightPC.getSelectedName() != null) {
+//                ServerController srcPC = rightPC;
+//                PanelController dstPC = leftPC;
+//                Path srcPath = Paths.get(srcPC.getCurrentPath(), srcPC.getSelectedName());
+//
+//                Path dstPath = Paths.get(dstPC.getCurrentPath()).resolve(srcPath.getFileName().toString());
+//
+//                if (Files.isDirectory(srcPath)) {
+//                    copyDir(srcPath, dstPath, dstPC);
+//                } else {
+//                    copyFile(srcPath, dstPath, dstPC);
+//                }
+//            }
+//
+//            Path srcPath = Paths.get(srcPC.getCurrentPath(), srcPC.getSelectedName());
+//
+//            Path dstPath = Paths.get(dstPC.getCurrentPath()).resolve(srcPath.getFileName().toString());
+//
+//            if (Files.isDirectory(srcPath)) {
+//                copyDir(srcPath, dstPath, dstPC);
+//            } else {
+//                copyFile(srcPath, dstPath, dstPC);
+//            }
         } catch (NullPointerException e) {
             Alert alert = new Alert(Alert.AlertType.WARNING, CommonMessages.INACTIVE, ButtonType.OK);
             alert.showAndWait();
@@ -233,33 +252,49 @@ public class Controller {
     @FXML
     PasswordField passwordField;
 
+    private ClientNetty nt = new ClientNetty();
+
     public void loginBtnAction(ActionEvent actionEvent) {
         String login = loginField.getText();
-        String password = passwordField.getText();
-        if (login.isEmpty() || password.isEmpty()) {
+        int password = passwordField.getText().hashCode();
+        if (login.isEmpty() || passwordField.getText().isEmpty()) {
             return; // нужно дописать вывод сообщения
         }
-        String AuthRequestBuilder = CommonMessages.AUTH + CommonMessages.LPS + login + CommonMessages.LPS + password;
         try {
-            ClientNetty.connect(AuthRequestBuilder, actionEvent);
+            nt.connect(new AuthRequest(login, password), actionEvent);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
-    public static void buildMainScene(ActionEvent actionEvent, Path path) {
-        ServerController.path = path;
+    public void buildMainScene(ActionEvent actionEvent, List<?> list) {
+        ServerController.list = (List<File>) list;
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(MainApp.class.getResource("main.fxml"));
+//            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("server.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 1280, 600);
             Stage stage = new Stage();
             stage.setTitle("File Manager");
             stage.setScene(scene);
             stage.show();
-                        ((Node) (actionEvent.getSource())).getScene().getWindow().hide();
+            ((Node) (actionEvent.getSource())).getScene().getWindow().hide();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static ServerController serverController;
+
+    public static void rememberMe(ServerController svc) {
+        serverController = svc;
+    }
+
+    public void updateList(List<File> list) {
+        serverController.serverList(list);
+    }
+
+    public void setServerPath(String path) {
+        serverController.setTextFiled(path);
     }
 
     public static void loginWindow(Stage stage) throws IOException {

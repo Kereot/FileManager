@@ -6,6 +6,7 @@ module gui.client {
     requires io.netty.transport;
     requires org.apache.commons.io;
     requires io.netty.codec;
+    requires req;
 
     opens gui.client to javafx.fxml;
     exports gui.client;
