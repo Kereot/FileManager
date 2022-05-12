@@ -4,12 +4,13 @@
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
-      <excludeFolder url="file://$MODULE_DIR$/client/target" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="JavaFX" level="application" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:18-ea+4" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:win:18-ea+4" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:18-ea+4" level="project" />

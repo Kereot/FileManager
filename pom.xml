@@ -6,7 +6,13 @@
 
     <groupId>com.example</groupId>
     <artifactId>FileManager</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>server</module>
+        <module>client</module>
+        <module>req</module>
+    </modules>
     <name>FileManager</name>
 
     <properties>
@@ -58,6 +64,23 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.11.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.76.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-handler</artifactId>
+            <version>4.1.76.Final</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>
@@ -80,7 +103,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.example.filemanager/ru.gb.filemanager.MainApp</mainClass>
+                            <mainClass>com.example.filemanager/main.java.ru.gb.filemanager.MainApp</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
